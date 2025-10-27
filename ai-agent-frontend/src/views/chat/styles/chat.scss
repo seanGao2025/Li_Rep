@@ -1,0 +1,978 @@
+/* 会动的图标 */
+/*1 电力闪烁 */
+.flash {
+  display: inline-block;
+  animation: flash 0.8s infinite alternate;
+}
+@keyframes flash {
+  from {
+    color: #ffcc00;
+    transform: scale(1);
+  }
+  to {
+    color: #ff6600;
+    transform: scale(1.2);
+  }
+}
+
+/*2 转动的电网地球 */
+.globe {
+  display: inline-block;
+  animation: spin 4s infinite linear;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*3 灯泡亮灭 */
+.bulb {
+  display: inline-block;
+  animation: bulb 1.5s infinite alternate;
+}
+@keyframes bulb {
+  from {
+    color: #999;
+    transform: scale(1);
+  }
+  to {
+    color: #ffea00;
+    transform: scale(1.2);
+  }
+}
+
+/*4 工具旋转 */
+.tool {
+  display: inline-block;
+  animation: tool 3s infinite linear;
+}
+@keyframes tool {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*5 告警闪红 */
+.alert {
+  display: inline-block;
+  animation: alert 0.7s infinite alternate;
+}
+@keyframes alert {
+  from {
+    color: #ff0000;
+    transform: scale(1);
+  }
+  to {
+    color: #880000;
+    transform: scale(1.3);
+  }
+}
+
+/* 标题链接样式 */
+.title-link {
+  background-color: #edd7aa; /* 左侧气泡背景色 */
+  border: 1px solid #e9ecef;
+  border-radius: 25px;
+  padding: 10px 20px;
+  color: #495057;
+  font-weight: 500;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 70%;
+  margin: 4px 0;
+}
+
+.title-link:hover {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+}
+
+/* 悬停时暂停图标动画，减少闪动 */
+.title-link:hover .icon {
+  animation-play-state: paused;
+}
+
+/* 防止生成中时的闪动问题 */
+.title-link {
+  /* 使用硬件加速，减少重绘 */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* 确保悬停状态稳定 */
+  will-change: background-color, border-color;
+  /* 优化点击响应 */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 点击时的视觉反馈 */
+.title-link:active {
+  transform: translateZ(0) scale(0.98);
+  transition: transform 0.1s ease;
+}
+
+/* 为正在生成中的消息添加特殊处理 */
+.msg-assistant-summary {
+  /* 减少重排和重绘 */
+  contain: layout style paint;
+}
+
+/* 右侧内容定位时的高亮效果 */
+.highlight {
+  animation: highlight-fade 2s ease-out;
+}
+
+@keyframes highlight-fade {
+  0% {
+    background-color: rgba(79, 195, 247, 0.3);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* 设定完成系统消息的气泡样式 */
+.msg-system:has(.success) {
+  max-width: fit-content;
+  text-align: left;
+  font-style: normal;
+  font-weight: 500;
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+  border-radius: 25px;
+  padding: 10px 20px;
+  color: #2e7d32;
+  margin: 4px 0;
+  position: relative;
+  animation: fadeIn 0.4s ease-in;
+}
+
+.msg-system:has(.success) .success {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-weight: inherit;
+}
+
+/* 思考过程容器样式 */
+.thinking-container {
+  margin: 12px 0 8px 0;
+  order: -1;
+}
+
+.thinking-border {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #b9e8f8;
+}
+
+.thinking-time {
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.thinking-time:hover {
+  background-color: #f1f3f5;
+}
+
+.thinking-time::after {
+  content: '▼';
+  font-size: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.thinking-border.expanded .thinking-time::after {
+  transform: rotate(180deg);
+}
+
+.thinking-content-scrollable {
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.35s ease-in-out,
+    padding 0.35s ease-in-out;
+  padding: 0 12px;
+  font-family: monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.thinking-border.expanded .thinking-content-scrollable {
+  max-height: 20vh;
+  overflow-y: auto;
+  padding: 10px 12px;
+}
+
+.message .terminated {
+  color: red;
+  font-size: 50%;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.thinking-time.completed {
+  color: #8bc34a;
+}
+
+/* 消息内容中的标题样式 */
+/* 消息样式 - 包括所有消息类型 */
+.message h1,
+.message h2,
+.message h3,
+.msg-assistant-summary h1,
+.msg-assistant-summary h2,
+.msg-assistant-summary h3 {
+  margin: 10px 0 5px;
+  color: #4fc3f7;
+  font-weight: 600;
+}
+
+.message h1,
+.msg-assistant-summary h1 {
+  font-size: 1.5em;
+  border-bottom: 2px solid #4fc3f7;
+  padding-bottom: 5px;
+}
+
+.message h2,
+.msg-assistant-summary h2 {
+  font-size: 1.3em;
+  border-left: 4px solid #4fc3f7;
+  padding-left: 10px;
+}
+
+.message h3,
+.msg-assistant-summary h3 {
+  font-size: 1.1em;
+}
+
+/* 代码样式 */
+.message code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.message pre {
+  background: #1f2937;
+  color: #f5f7fa;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+/* 引用样式 */
+.message blockquote,
+.message-content blockquote,
+.detail-content blockquote,
+blockquote {
+  border-left: 4px solid var(--accent);
+  padding: 5px 15px;
+  margin: 10px 0;
+  background: rgba(79, 195, 247, 0.05);
+  position: relative;
+  quotes: '"' '"';
+}
+
+/* 分割线样式 */
+.content-divider {
+  border: none;
+  height: 1px;
+  background: rgb(0 0 0 / 10%);
+  margin: 20px 0;
+  width: 100%;
+}
+
+/* 无序列表样式 */
+.content-list {
+  margin: 12px 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.content-list li {
+  position: relative;
+  padding-left: 16px;
+  margin: 6px 0;
+  line-height: 1.6;
+  color: #333;
+  text-indent: 0;
+}
+
+.content-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* 嵌套列表样式 - 整个列表项一起缩进，统一符号和文本间距 */
+.content-list li.nested-list {
+  padding-left: 16px;
+  margin-left: 20px;
+}
+
+.content-list li.nested-list::before {
+  content: '◦';
+  font-size: 14px;
+  left: 0;
+}
+
+.content-list li.level-2 {
+  padding-left: 16px;
+  margin-left: 40px;
+}
+
+.content-list li.level-2::before {
+  content: '▪';
+  font-size: 12px;
+  left: 0;
+}
+
+.content-list li.level-3 {
+  padding-left: 16px;
+  margin-left: 60px;
+}
+
+.content-list li.level-3::before {
+  content: '▫';
+  font-size: 10px;
+  left: 0;
+}
+
+/* 列表项内部样式 */
+.content-list .list-title {
+  display: inline;
+  font-weight: 500;
+  color: #333;
+}
+
+.content-list .list-description {
+  display: inline;
+  margin-left: 8px;
+  color: #666;
+  line-height: 1.6;
+}
+
+/* 错误、警告、成功消息样式 */
+.message .error {
+  color: #f56c6c;
+  background: rgba(245, 108, 108, 0.1);
+  border: 1px solid rgba(245, 108, 108, 0.2);
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.message .warning {
+  color: #e6a23c;
+  background: rgba(230, 162, 60, 0.1);
+  border: 1px solid rgba(230, 162, 60, 0.2);
+  padding: 1px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.message .success {
+  color: #67c23a;
+  background: rgba(103, 194, 58, 0.1);
+  border: 1px solid rgba(103, 194, 58, 0.2);
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+/* 表格样式 */
+/* 表格样式 - 包括所有消息类型 */
+.message table,
+.msg-assistant-summary table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.message table th,
+.message table td,
+.msg-assistant-summary table th,
+.msg-assistant-summary table td {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.message table th,
+.msg-assistant-summary table th {
+  background: rgba(64, 158, 255, 0.1);
+  color: #4fc3f7;
+  font-weight: 600;
+}
+
+.message table tr:nth-child(even),
+.msg-assistant-summary table tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* 列表样式 */
+.message ul,
+.message ol {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.message li {
+  margin: 5px 0;
+}
+
+/* 无序列表样式 */
+.content-list {
+  margin: 12px 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.content-list li {
+  position: relative;
+  padding-left: 16px; /* Unified spacing */
+  margin: 6px 0;
+  line-height: 1.6;
+  color: #333;
+  text-indent: 0;
+}
+
+.content-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* 嵌套列表样式 */
+.content-list li.nested-list {
+  padding-left: 16px;
+  margin-left: 20px;
+}
+
+.content-list li.nested-list::before {
+  font-size: 14px;
+  left: 0;
+}
+
+.content-list li.level-2 {
+  padding-left: 16px;
+  margin-left: 40px;
+}
+
+.content-list li.level-2::before {
+  font-size: 12px;
+  left: 0;
+}
+
+.content-list li.level-3 {
+  padding-left: 16px;
+  margin-left: 60px;
+}
+
+.content-list li.level-3::before {
+  font-size: 10px;
+  left: 0;
+}
+
+/* 滚动条样式 - 确保左右面板一致 */
+.chat-container::-webkit-scrollbar,
+.detail-content::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+.chat-container::-webkit-scrollbar-thumb,
+.detail-content::-webkit-scrollbar-thumb {
+  background: rgba(79, 195, 247, 0.4) !important;
+  border-radius: 3px !important;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+.chat-container::-webkit-scrollbar-track,
+.detail-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05) !important;
+  border-radius: 3px;
+}
+
+.chat-container::-webkit-scrollbar-corner,
+.detail-content::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* 代码块样式 - 参考Semi Chat结构 */
+.code-block-container {
+  margin: 16px 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  /* 确保没有白色边框 */
+  outline: none;
+  box-sizing: border-box;
+}
+
+.code-block {
+  margin: 0;
+  padding: 0;
+  background: #1e1e1e;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 0.9;
+  color: #d4d4d4;
+  position: relative;
+  padding-left: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.code-block code {
+  display: block;
+  background: transparent;
+  padding: 6px 10px;
+  border-radius: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  position: relative;
+  margin: 0;
+}
+
+/* 行号样式 */
+.code-block {
+  position: relative;
+  padding-left: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.code-block::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 100%;
+  background: #252526;
+  border-right: 1px solid #333;
+  z-index: 1;
+}
+
+.code-block code {
+  position: relative;
+  z-index: 2;
+  padding-left: 0;
+}
+
+.code-block code .line {
+  display: block;
+  position: relative;
+  padding-left: 10px;
+  min-height: 0.9em;
+  margin: 0;
+  line-height: 0.9;
+  padding: 0;
+}
+
+.code-block code .line::before {
+  content: attr(data-line);
+  position: absolute;
+  left: -42px;
+  top: 0;
+  width: 12px;
+  text-align: right;
+  color: #6a6a6a;
+  font-size: 11px;
+  line-height: 0.9;
+  padding-right: 8px;
+  user-select: none;
+  z-index: 1;
+}
+
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #404040;
+  font-size: 12px;
+  font-weight: 500;
+  min-height: 36px;
+}
+
+.code-language {
+  color: #ffffff;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+  font-size: 12px;
+  flex: 1;
+}
+
+.copy-code-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #404040;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.copy-code-btn:hover {
+  background: #4fc3f7;
+  border-color: #4fc3f7;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(79, 195, 247, 0.3);
+}
+
+.copy-code-btn svg {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.copy-code-btn span {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* 旧的代码块样式已移除，使用Semi Chat风格的新结构 */
+
+/* 内联代码样式 */
+code:not(.code-block code) {
+  background: #f1f3f4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
+  color: #e83e8c;
+  border: 1px solid #e9ecef;
+}
+
+/* 代码块语法高亮基础样式 - 深色主题 */
+.language-javascript,
+.language-js {
+  color: #d4d4d4;
+}
+
+.language-python {
+  color: #d4d4d4;
+}
+
+.language-html {
+  color: #d4d4d4;
+}
+
+.language-css {
+  color: #d4d4d4;
+}
+
+.language-json {
+  color: #d4d4d4;
+}
+
+.language-bash,
+.language-shell {
+  color: #d4d4d4;
+}
+
+/* 语法高亮颜色 */
+.code-block .line {
+  color: #d4d4d4;
+}
+
+/* 关键字高亮 */
+.code-block .line:has-text("import"),
+.code-block .line:has-text("from"),
+.code-block .line:has-text("const"),
+.code-block .line:has-text("let"),
+.code-block .line:has-text("var"),
+.code-block .line:has-text("function"),
+.code-block .line:has-text("return"),
+.code-block .line:has-text("export"),
+.code-block .line:has-text("default"),
+.code-block .line:has-text("class"),
+.code-block .line:has-text("if"),
+.code-block .line:has-text("else"),
+.code-block .line:has-text("for"),
+.code-block .line:has-text("while") {
+  color: #569cd6;
+}
+
+/* 字符串高亮 */
+.code-block .line:has-text("'"),
+.code-block .line:has-text("\"") {
+  color: #ce9178;
+}
+
+/* 注释高亮 */
+.code-block .line:has-text("//"),
+.code-block .line:has-text("/*"),
+.code-block .line:has-text("*/") {
+  color: #6a9955;
+}
+
+/* 数字高亮 */
+.code-block .line:has-text("0"),
+.code-block .line:has-text("1"),
+.code-block .line:has-text("2"),
+.code-block .line:has-text("3"),
+.code-block .line:has-text("4"),
+.code-block .line:has-text("5"),
+.code-block .line:has-text("6"),
+.code-block .line:has-text("7"),
+.code-block .line:has-text("8"),
+.code-block .line:has-text("9") {
+  color: #b5cea8;
+}
+
+/* CSS变量定义 */
+:root {
+  --accent: #4fc3f7;
+  --muted: #6b7280;
+  --assistant: #1f2937;
+  --card: #ffffff;
+}
+
+/* 输入容器样式 */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--card);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow: hidden;
+}
+
+/* 输入框样式 */
+textarea {
+  flex: 1;
+  height: 35px;
+  min-height: 35px;
+  max-height: 120px;
+  border-radius: 12px;
+  padding: 14px;
+  border: none;
+  background: transparent;
+  color: var(--assistant);
+  resize: none;
+  font-size: 15px;
+  transition: all 0.3s;
+  outline: none;
+  font-family: inherit;
+  line-height: 1;
+  overflow-y: auto;
+}
+
+textarea:focus {
+  outline: none;
+}
+
+.input-container:focus-within {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 12px rgba(79, 195, 247, 0.2) !important;
+}
+
+/* 输入框聚焦时移除内部边框 */
+textarea:focus {
+  outline: none;
+}
+
+/* 按钮容器样式 */
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 4px 0 0 0;
+  margin-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-container:hover {
+  border-top-color: rgba(79, 195, 247, 0.3);
+}
+
+/* 原生按钮样式 - 与index-light.html保持一致 */
+.btn {
+  background: var(--accent);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:hover {
+  background: #0288d1;
+  transform: scale(1.05);
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn svg {
+  fill: #fff;
+  width: 16px;
+  height: 16px;
+}
+
+.btn.stop {
+  background: #ef4444;
+}
+
+.btn.stop:hover {
+  background: #dc2626;
+}
+
+.role-btn,
+.file-brow-btn,
+.data-link-btn,
+.model-btn {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-btn:hover,
+.file-brow-btn:hover,
+.data-link-btn:hover,
+.model-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.role-btn svg,
+.file-brow-btn svg,
+.data-link-btn svg,
+.model-btn svg {
+  fill: var(--muted);
+  width: 16px;
+  height: 16px;
+}
+
+.role-btn.completed {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.role-btn.completed svg {
+  fill: #fff;
+}
+
+.role-btn.active svg:not(.completed svg),
+.file-brow-btn.active svg,
+.data-link-btn.active svg,
+.model-btn.active svg {
+  fill: var(--accent);
+}
+
+/* 确保completed状态的图标为白色，优先级更高 */
+.role-btn.completed svg {
+  fill: #fff !important;
+}
+
+/* 添加数据链接按钮选中状态样式 */
+.data-link-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.data-link-btn.active svg {
+  fill: #fff;
+}
+
+/* 基础字号已在全局style.css中定义 */
+
+/* 按钮图标与原生SVG风格统一 */
+.btn-svg {
+  width: 16px;
+  height: 16px;
+  fill: var(--muted);
+}
+
+.btn-svg.white {
+  fill: #fff;
+}
+
+.role-btn.completed .btn-svg {
+  fill: #fff;
+}
+
+.data-link-btn.active .btn-svg,
+.role-btn.active .btn-svg,
+.file-brow-btn.active .btn-svg,
+.model-btn.active .btn-svg {
+  fill: var(--accent);
+}

@@ -1,0 +1,123 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-shadow:
+    0px 0px 8px 0px rgba(0, 0, 0, 0.16),
+    inset 0px 1px 35px 0px #ffffff;
+  border-radius: 16px;
+  border: 1px solid #ffffff;
+  background-color: #f5f3ef;
+  &-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    background-color: #fff;
+    border-bottom: 1px solid #dbe0ea;
+    &.expand {
+      justify-content: center;
+      .card-head-features-box {
+        margin-right: 0;
+      }
+    }
+    &-title {
+      height: 100%;
+      position: relative;
+      font-size: 14px;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      &-square {
+        background: #4fc3f7;
+        width: 5px;
+        height: 20px;
+        margin-left: 30px;
+        border-radius: 3px;
+      }
+      &-content {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        line-height: 50px;
+        padding-left: 15px;
+        margin-left: 30px;
+        font-size: 24px;
+        font-weight: normal;
+        color: #000000;
+        &.bottom-line {
+          color: #3189cb;
+        }
+      }
+    }
+    &-features {
+      display: flex;
+      justify-content: space-between;
+      &-box {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-right: 10px;
+        font-size: 12px;
+        cursor: pointer;
+        &-square {
+          height: 100%;
+          padding: 10px 20px;
+          box-sizing: border-box;
+          background: #3189cb;
+          box-shadow: 0px -1px 0px 0px #dbe0ea;
+        }
+        img {
+          width: 13px;
+          height: 13px;
+          margin-right: 5px;
+        }
+      }
+    }
+    &-tab {
+      width: 100%;
+      padding: 0 30px;
+      display: flex;
+      margin-top: 5px;
+      overflow: hidden;
+      justify-content: flex-start;
+      &-item {
+        padding: 0 18px;
+        font-size: 20px;
+        font-weight: normal;
+        color: #000000;
+        padding-bottom: 5px;
+        cursor: pointer;
+        display: inline-block;
+        word-wrap: break-word;
+        white-space: nowrap;
+        letter-spacing: 2px;
+        color: #8a8888;
+        &.active {
+          color: #000000;
+          border-bottom: 2px solid #4fc3f7;
+        }
+      }
+    }
+  }
+  &-main {
+    flex: 1;
+    padding: 10px 20px 20px;
+    overflow: auto;
+    background-color: #f5f3ef;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    &::-webkit-scrollbar-thumb {
+      background: #ccd1da;
+    }
+    &::-webkit-scrollbar-track-piece {
+      background-color: #f5f3ef;
+    }
+  }
+}

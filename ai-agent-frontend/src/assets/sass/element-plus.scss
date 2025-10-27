@@ -1,0 +1,14 @@
+@use 'sass:map';
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  $colors: (
+    'primary': (
+      'base': #4fc3f7
+    )
+  ),
+  $font-size: (
+    base: 16px
+  )
+);
+
+@use 'element-plus/theme-chalk/src/index.scss' as *;
+

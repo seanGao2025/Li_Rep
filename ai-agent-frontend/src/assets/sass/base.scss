@@ -1,0 +1,617 @@
+$--px0: 0;
+$--px3: 3px;
+$--px5: 5px;
+$--px8: 8px;
+$--px10: 10px;
+$--px12: 12px;
+$--px15: 15px;
+$--px18: 18px;
+$--px20: 20px;
+$--px25: 25px;
+$--px30: 30px;
+$--px35: 35px;
+$--px40: 40px;
+$--px45: 45px;
+$--px50: 50px;
+
+.m-0 {
+  margin: $--px0;
+}
+.m-3 {
+  margin: $--px8;
+}
+.m-5 {
+  margin: $--px5;
+}
+.m-8 {
+  margin: $--px8;
+}
+.m-10 {
+  margin: $--px10;
+}
+.m-12 {
+  margin: $--px12;
+}
+.m-15 {
+  margin: $--px15;
+}
+.m-18 {
+  margin: $--px18;
+}
+.m-20 {
+  margin: $--px20;
+}
+.m-25 {
+  margin: $--px25;
+}
+.m-30 {
+  margin: $--px30;
+}
+.m-35 {
+  margin: $--px35;
+}
+.m-40 {
+  margin: $--px40;
+}
+.m-45 {
+  margin: $--px45;
+}
+.m-50 {
+  margin: $--px50;
+}
+
+.m-t-0 {
+  margin-top: $--px0;
+}
+.m-t-3 {
+  margin-top: $--px8;
+}
+.m-t-5 {
+  margin-top: $--px5;
+}
+.m-t-8 {
+  margin-top: $--px8;
+}
+.m-t-10 {
+  margin-top: $--px10;
+}
+.m-t-12 {
+  margin-top: $--px12;
+}
+.m-t-15 {
+  margin-top: $--px15;
+}
+.m-t-18 {
+  margin-top: $--px18;
+}
+.m-t-20 {
+  margin-top: $--px20;
+}
+.m-t-25 {
+  margin-top: $--px25;
+}
+.m-t-30 {
+  margin-top: $--px30;
+}
+.m-t-35 {
+  margin-top: $--px35;
+}
+.m-t-40 {
+  margin-top: $--px40;
+}
+.m-t-45 {
+  margin-top: $--px45;
+}
+.m-t-50 {
+  margin-top: $--px50;
+}
+
+.m-r-0 {
+  margin-right: $--px0;
+}
+.m-r-3 {
+  margin-right: $--px8;
+}
+.m-r-5 {
+  margin-right: $--px5;
+}
+.m-r-8 {
+  margin-right: $--px8;
+}
+.m-r-10 {
+  margin-right: $--px10;
+}
+.m-r-12 {
+  margin-right: $--px12;
+}
+.m-r-15 {
+  margin-right: $--px15;
+}
+.m-r-18 {
+  margin-right: $--px18;
+}
+.m-r-20 {
+  margin-right: $--px20;
+}
+.m-r-25 {
+  margin-right: $--px25;
+}
+.m-r-30 {
+  margin-right: $--px30;
+}
+.m-r-35 {
+  margin-right: $--px35;
+}
+.m-r-40 {
+  margin-right: $--px40;
+}
+.m-r-45 {
+  margin-right: $--px45;
+}
+.m-r-50 {
+  margin-right: $--px50;
+}
+
+.m-b-0 {
+  margin-bottom: $--px0;
+}
+.m-b-3 {
+  margin-bottom: $--px8;
+}
+.m-b-5 {
+  margin-bottom: $--px5;
+}
+.m-b-8 {
+  margin-bottom: $--px8;
+}
+.m-b-10 {
+  margin-bottom: $--px10;
+}
+.m-b-12 {
+  margin-bottom: $--px12;
+}
+.m-b-15 {
+  margin-bottom: $--px15;
+}
+.m-b-18 {
+  margin-bottom: $--px18;
+}
+.m-b-20 {
+  margin-bottom: $--px20;
+}
+.m-b-25 {
+  margin-bottom: $--px25;
+}
+.m-b-30 {
+  margin-bottom: $--px30;
+}
+.m-b-35 {
+  margin-bottom: $--px35;
+}
+.m-b-40 {
+  margin-bottom: $--px40;
+}
+.m-b-45 {
+  margin-bottom: $--px45;
+}
+.m-b-50 {
+  margin-bottom: $--px50;
+}
+
+.m-l-0 {
+  margin-left: $--px0;
+}
+.m-l-3 {
+  margin-left: $--px8;
+}
+.m-l-5 {
+  margin-left: $--px5;
+}
+.m-l-8 {
+  margin-left: $--px8;
+}
+.m-l-10 {
+  margin-left: $--px10;
+}
+.m-l-12 {
+  margin-left: $--px12;
+}
+.m-l-15 {
+  margin-left: $--px15;
+}
+.m-l-18 {
+  margin-left: $--px18;
+}
+.m-l-20 {
+  margin-left: $--px20;
+}
+.m-l-25 {
+  margin-left: $--px25;
+}
+.m-l-30 {
+  margin-left: $--px30;
+}
+.m-l-35 {
+  margin-left: $--px35;
+}
+.m-l-40 {
+  margin-left: $--px40;
+}
+.m-l-45 {
+  margin-left: $--px45;
+}
+.m-l-50 {
+  margin-left: $--px50;
+}
+
+.p-0 {
+  padding: $--px0;
+}
+.p-3 {
+  padding: $--px8;
+}
+.p-5 {
+  padding: $--px5;
+}
+.p-8 {
+  padding: $--px8;
+}
+.p-10 {
+  padding: $--px10;
+}
+.p-12 {
+  padding: $--px12;
+}
+.p-15 {
+  padding: $--px15;
+}
+.p-18 {
+  padding: $--px18;
+}
+.p-20 {
+  padding: $--px20;
+}
+.p-25 {
+  padding: $--px25;
+}
+.p-30 {
+  padding: $--px30;
+}
+.p-35 {
+  padding: $--px35;
+}
+.p-40 {
+  padding: $--px40;
+}
+.p-45 {
+  padding: $--px45;
+}
+.p-50 {
+  padding: $--px50;
+}
+
+.p-t-0 {
+  padding-top: $--px0;
+}
+.p-t-3 {
+  padding-top: $--px8;
+}
+.p-t-5 {
+  padding-top: $--px5;
+}
+.p-t-8 {
+  padding-top: $--px8;
+}
+.p-t-10 {
+  padding-top: $--px10;
+}
+.p-t-12 {
+  padding-top: $--px12;
+}
+.p-t-15 {
+  padding-top: $--px15;
+}
+.p-t-18 {
+  padding-top: $--px18;
+}
+.p-t-20 {
+  padding-top: $--px20;
+}
+.p-t-25 {
+  padding-top: $--px25;
+}
+.p-t-30 {
+  padding-top: $--px30;
+}
+.p-t-35 {
+  padding-top: $--px35;
+}
+.p-t-40 {
+  padding-top: $--px40;
+}
+.p-t-45 {
+  padding-top: $--px45;
+}
+.p-t-50 {
+  padding-top: $--px50;
+}
+
+.p-r-0 {
+  padding-right: $--px0;
+}
+.p-r-3 {
+  padding-right: $--px8;
+}
+.p-r-5 {
+  padding-right: $--px5;
+}
+.p-r-8 {
+  padding-right: $--px8;
+}
+.p-r-10 {
+  padding-right: $--px10;
+}
+.p-r-12 {
+  padding-right: $--px12;
+}
+.p-r-15 {
+  padding-right: $--px15;
+}
+.p-r-18 {
+  padding-right: $--px18;
+}
+.p-r-20 {
+  padding-right: $--px20;
+}
+.p-r-25 {
+  padding-right: $--px25;
+}
+.p-r-30 {
+  padding-right: $--px30;
+}
+.p-r-35 {
+  padding-right: $--px35;
+}
+.p-r-40 {
+  padding-right: $--px40;
+}
+.p-r-45 {
+  padding-right: $--px45;
+}
+.p-r-50 {
+  padding-right: $--px50;
+}
+
+.p-b-0 {
+  padding-bottom: $--px0;
+}
+.p-b-3 {
+  padding-bottom: $--px8;
+}
+.p-b-5 {
+  padding-bottom: $--px5;
+}
+.p-b-8 {
+  padding-bottom: $--px8;
+}
+.p-b-10 {
+  padding-bottom: $--px10;
+}
+.p-b-12 {
+  padding-bottom: $--px12;
+}
+.p-b-15 {
+  padding-bottom: $--px15;
+}
+.p-b-18 {
+  padding-bottom: $--px18;
+}
+.p-b-20 {
+  padding-bottom: $--px20;
+}
+.p-b-25 {
+  padding-bottom: $--px25;
+}
+.p-b-30 {
+  padding-bottom: $--px30;
+}
+.p-b-35 {
+  padding-bottom: $--px35;
+}
+.p-b-40 {
+  padding-bottom: $--px40;
+}
+.p-b-45 {
+  padding-bottom: $--px45;
+}
+.p-b-50 {
+  padding-bottom: $--px50;
+}
+
+.p-l-0 {
+  padding-left: $--px0;
+}
+.p-l-3 {
+  padding-left: $--px8;
+}
+.p-l-5 {
+  padding-left: $--px5;
+}
+.p-l-8 {
+  padding-left: $--px8;
+}
+.p-l-10 {
+  padding-left: $--px10;
+}
+.p-l-12 {
+  padding-left: $--px12;
+}
+.p-l-15 {
+  padding-left: $--px15;
+}
+.p-l-18 {
+  padding-left: $--px18;
+}
+.p-l-20 {
+  padding-left: $--px20;
+}
+.p-l-25 {
+  padding-left: $--px25;
+}
+.p-l-30 {
+  padding-left: $--px30;
+}
+.p-l-35 {
+  padding-left: $--px35;
+}
+.p-l-40 {
+  padding-left: $--px40;
+}
+.p-l-45 {
+  padding-left: $--px45;
+}
+.p-l-50 {
+  padding-left: $--px50;
+}
+
+.full {
+  width: 100%;
+  height: 100%;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+  overflow: auto;
+}
+
+.dl {
+  display: inline-block !important;
+}
+
+.db {
+  display: block !important;
+}
+
+/* 文字大小辅助类 */
+.font-12 {
+  font-size: 12px;
+}
+
+.font-14 {
+  font-size: 14px;
+}
+
+.font-16 {
+  font-size: 16px;
+}
+
+.font-18 {
+  font-size: 18px;
+}
+
+.font-20 {
+  font-size: 20px;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.text-link {
+  cursor: pointer;
+}
+
+/* 文字布局辅助类 */
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-auto {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.v-middle {
+  vertical-align: middle;
+}
+
+.v-top {
+  vertical-align: top;
+}
+
+.v-bottom {
+  vertical-align: bottom;
+}
+
+.hide {
+  overflow: hidden;
+}
+
+// 盒子模型
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.flex {
+  display: flex;
+}
+
+.flex1 {
+  flex: 1;
+}
+
+.flex-row,
+.flex-col {
+  &.align-start {
+    align-items: flex-start;
+  }
+  &.align-end {
+    align-items: flex-end;
+  }
+  &.align-center {
+    align-items: center;
+  }
+  &.justify-start {
+    justify-content: flex-start;
+  }
+  &.justify-end {
+    justify-content: flex-end;
+  }
+  &.justify-center {
+    justify-content: center;
+  }
+  &.justify-between {
+    justify-content: space-between;
+  }
+  &.justify-around {
+    justify-content: space-around;
+  }
+  .flex1 {
+    flex: 1;
+  }
+  .shrink0 {
+    flex-shrink: 0;
+  }
+  .flex-space {
+    display: flex;
+    justify-content: space-between;
+  }
+}

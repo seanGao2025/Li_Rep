@@ -1,0 +1,9 @@
+flask
+flask-cors
+requests
+whisper
+piper-tts
+onnxruntime
+soundfile
+numpy
+pyttsx3

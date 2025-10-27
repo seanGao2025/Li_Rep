@@ -1,0 +1,219 @@
+.chat-wrapper {
+  height: calc(100% - 50px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .chat-component {
+    border-radius: 0 0 16px 16px;
+    height: 100%;
+    background-color: #fff;
+    max-width: 100%;
+    flex: 1;
+    overflow: auto;
+  }
+  // 行内代码样式
+  :not(pre) > code {
+    background-color: rgba(175, 184, 193, 0.2);
+    border-radius: 4px;
+    padding: 0.2em 0.4em;
+    margin: 0 0.2em;
+    font-size: 85%;
+    white-space: break-spaces;
+  }
+}
+
+.semi-chat-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--semi-color-border);
+  margin: 8px 16px;
+  border-radius: 8px;
+  padding: 8px;
+  background-color: #fff;
+  .semi-chat-input {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    min-height: 40px; // 改为 minHeight，移除固定 height
+    padding: 0; // 添加些许内边距
+  }
+  .semi-chat-input-send {
+    margin-bottom: 7px;
+    height: 32px;
+    width: 32px; // 设置按钮宽度与高度相等
+    padding: 0; // 移除内边距使图标居中
+  }
+}
+
+.semi-chat-chatBox-content {
+  .think-block {
+    color: #8b8b8b;
+    white-space: pre-wrap;
+    margin: 0;
+    padding: 0 0 0 13px;
+    line-height: 24px;
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: calc(100% - 10px);
+      border-left: 2px solid #e5e5e5;
+      margin-top: 5px;
+    }
+  }
+  .semi-markdownRender {
+    div {
+      line-height: 27px;
+      font-size: 15px;
+    }
+    p {
+      margin: 12px 0;
+      font-size: 15px;
+      line-height: 27px;
+    }
+
+    ul,
+    ol {
+      margin: 12px 0;
+      padding-left: 24px;
+      list-style-type: disc;
+    }
+    ul ul,
+    ol ul,
+    ol ol,
+    ul ol {
+      list-style-type: circle !important;
+    }
+
+    li::marker {
+      line-height: 27px;
+      color: rgb(139 139 139);
+    }
+    p:last-child {
+      margin-bottom: 0 !important;
+    }
+    li > :first-child {
+      margin-top: 0;
+    }
+    li > p {
+      margin: 4px 0;
+    }
+
+    hr {
+      height: 1px;
+      margin: calc(1.143 * 12px) 0;
+      background: rgb(163 163 163);
+      border: none;
+      display: block;
+    }
+  }
+  .semi-markdownRender-component-header.semi-typography.semi-typography-h3 {
+    font-size: 18px;
+    line-height: 1.5;
+    font-weight: 600;
+    margin: 18px 0 14px 0;
+  }
+  .semi-markdownRender > :first-child {
+    margin-top: 0 !important;
+  }
+  .semi-typography {
+    .katex {
+      font-size: 1.1em;
+      display: inline-block;
+      text-indent: 0;
+    }
+
+    .katex-display {
+      margin: 1em 0;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 8px 0;
+      text-align: center;
+    }
+  }
+}
+
+.semi-chat-chatBox-content-loading {
+  .semi-chat-chatBox-loading {
+    display: flex;
+    align-items: baseline;
+
+    &-item {
+      border-radius: 50%;
+      height: 8px;
+      width: 8px;
+      background-color: var(--semi-color-text-0);
+      margin: 6px 18px;
+      overflow: visible;
+      position: relative;
+      animation: semi-chat-loading-flashing 0.8s infinite alternate;
+      animation-delay: -0.2s;
+      animation-timing-function: ease;
+
+      &::before {
+        content: '';
+        border-radius: 50%;
+        height: 8px;
+        width: 8px;
+        background-color: var(--semi-color-text-0);
+        position: absolute;
+        top: 0;
+        left: -15px;
+        animation: semi-chat-loading-flashing 0.8s infinite alternate;
+        animation-timing-function: ease;
+        animation-delay: -0.4s;
+      }
+
+      &::after {
+        content: '';
+        border-radius: 50%;
+        height: 8px;
+        width: 8px;
+        background-color: var(--semi-color-text-0);
+        position: absolute;
+        top: 0;
+        left: 15px;
+        animation: semi-chat-loading-flashing 0.8s infinite alternate;
+        animation-delay: 0s;
+        animation-timing-function: ease;
+      }
+    }
+  }
+}
+
+@keyframes semi-chat-loading-flashing {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.1;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.preview-button-wrapper {
+  transition: opacity 0.3s ease;
+
+  pre:hover & {
+    opacity: 1 !important;
+  }
+
+  &:hover {
+    background: #40a9ff !important;
+  }
+
+  &:active {
+    background: #096dd9 !important;
+  }
+}
+
+.semi-codeHighlight-defaultTheme pre[class*='language-'],
+.semi-codeHighlight-defaultTheme code[class*='language-'] {
+  white-space: pre-wrap;
+}

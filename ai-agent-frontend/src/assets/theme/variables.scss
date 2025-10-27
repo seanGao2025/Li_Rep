@@ -1,0 +1,48 @@
+// 全局配色板
+$bg: #edece3; // 大背景色
+$master: #4fc3f7; // 主色
+$vice: #f5f3ef; // 卡片背景色
+$viceBorder: #dbe0ea; // 卡片边框色
+$statusPassed: #9bf6de; // 状态通过
+$statusDisable: #d8d8d8; // 状态禁用
+$warning: #f2e5b0; // 警示按钮色
+$error: #f8d6d6; //错误告警
+
+$buttonLink: #1569bd;
+
+$buttonClick: #d2e1f8;
+$buttonHover: #0a60b8;
+
+$successText: #28a986; //成功
+$warringText: #9b8352; //警告
+$errorText: #de5d5b; //错误
+
+$embellishment: #ff9800; //  点缀色
+
+//文本颜色
+$masterText: #585757; // 正文字色
+$fontColorCard: #000000; //卡片字体颜色
+$fontColorToDarkBG: #fff; //深色背景字体颜色
+$fontColorToMain: #323232; //主标题颜色
+$fontColorToNormal: #585757; //常规文本
+$fontColorToSub: #8a8888; //辅助文本
+$fontColorToSecondary: #bdbcbb; //次要文本
+
+// 字体大小
+$fontIconWidth: 18px;
+
+//表格
+$tSelect: #ddefff; // 表格选中背景色
+$tHover: #f1f9fd;
+$tBtnText: #027db4; // 表格按钮字色
+
+$font-weight: 600;
+
+$font-size-extra-large-title: 30px; // 特大
+$font-size-large-title: 24px; // 大文本-主标题
+$font-size-medium-title: 20px; // 常规文本-标题
+$font-size: 18px; // 常规文本-正文
+$font-size-small: 16px; // 辅助文本
+$font-size-extra-small: 14px; // 次要文本
+
+// 和按钮一起出现的图标用线性图标，单独出现的图标使用面性图标！！！

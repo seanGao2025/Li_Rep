@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "typeRoots": [
+      // 声明文件目录，默认时node_modules/@types
+      "node_modules/@types",
+      "src/types"
+    ],
+    "target": "es2021", // 目标语言的版本
+    "useDefineForClassFields": true, // 此标志用作迁移到即将推出的类字段标准版本的一部分，默认：false。
+    "module": "esnext", // 生成代码的模板标准
+    "moduleResolution": "node", // 模块解析策略，ts默认用node的解析策略，即相对的方式导入
+    "strict": true, // 开启所有严格的类型检查
+    "jsx": "preserve", // 指定 jsx 格式
+    "sourceMap": true, // 生成目标文件的sourceMap文件
+    "resolveJsonModule": true, // 是否解析 JSON 模块，默认：false
+    "isolatedModules": true, // 是否将每个文件转换为单独的模块，默认：false
+    "esModuleInterop": true, // 是否通过为所有导入模块创建命名空间对象，允许CommonJS和ES模块之间的互操作性，开启改选项时，也自动开启allowSyntheticDefaultImports选项，默认：false
+    "lib": ["es2021", "dom"], // 指定项目运行时使用的库
+    "skipLibCheck": true, // 是否跳过声明文件的类型检查，这可以在编译期间以牺牲类型系统准确性为代价来节省时间，默认：false
+    "baseUrl": "./", // 用于解析非绝对模块名的基本目录，相对模块不受影响
+    "paths": {
+      // 用于设置模块名称基于baseUrl的路径映射关系
+      "@": ["src"],
+      "@/*": ["src/*"],
+      "@/modules/*": ["src/modules/*"]
+    }
+  },
+  "files": [],
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
+}
