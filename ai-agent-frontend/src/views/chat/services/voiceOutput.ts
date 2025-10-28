@@ -136,10 +136,15 @@ export function useVoiceOutput() {
    */
   const checkService = async (): Promise<boolean> => {
     try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 5000)
+      
       const response = await fetch(`${getServiceUrl('voiceBackend')}/health`, {
         method: 'GET',
-        timeout: 5000
+        signal: controller.signal
       })
+      
+      clearTimeout(timeoutId)
       return response.ok
     } catch (error) {
       console.warn('语音服务检查失败:', error)

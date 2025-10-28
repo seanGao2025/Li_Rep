@@ -1,127 +1,155 @@
-# 配置管理说明
+# 服务端点配置
 
-## 📁 配置文件结构
+本项目使用模块化的配置管理，将不同模块的服务端点配置分别管理。
 
-```
-src/config/
-├── endpoints.ts          # 服务端点配置
-└── README.md            # 配置说明文档
-```
+## 配置文件
 
-## 🔧 配置说明
+### `endpoints.ts` (已弃用)
 
-### 1. 服务端点配置 (endpoints.ts)
+**已废弃** - 原先的统一配置文件，保留用于向后兼容。
 
-统一管理项目中所有服务的地址和端口配置。
+### `endpoints-chat.ts` - Chat 模块配置
 
-#### 支持的服务
+为 `views/chat` 模块提供 LLM 和对话服务配置。
 
-- **frontend**: 前端服务
-- **voiceBackend**: 语音后端服务
-- **llm**: LLM 服务
+**导出的配置：**
 
-#### 配置结构
+- `frontend` - 前端服务配置
+- `llm` - LLM 服务配置
+- `chat` - HTTP API 对话服务配置
+
+**导出的函数：**
+
+- `chatEndpoints` - 配置对象
+- `getChatServiceConfig(name)` - 获取特定服务配置
+- `getChatServiceUrl(name, path)` - 获取服务 URL
+- `printChatConfig()` - 打印当前配置
+
+**使用示例：**
 
 ```typescript
-interface ServiceConfig {
-  host: string // 主机地址
-  port: number // 端口号
-  protocol: 'http' | 'https' // 协议
-  baseUrl: string // 完整 URL
+import { chatEndpoints, getChatServiceUrl } from '@/config/endpoints-chat'
+
+// 获取 chat 服务 URL
+const chatUrl = chatEndpoints.chat.baseUrl + chatEndpoints.chat.path
+
+// 或使用便捷函数
+const url = getChatServiceUrl('chat', '/query')
+```
+
+### `endpoints-socket-chat.ts` - Socket-Chat 模块配置
+
+为 `views/socket-chat` 模块提供 Socket.IO 服务配置。
+
+**导出的配置：**
+
+- `socket` - Socket 服务配置
+
+**导出的函数：**
+
+- `socketChatEndpoints` - 配置对象
+- `getSocketChatServiceConfig(name)` - 获取特定服务配置
+- `getSocketChatServiceUrl(name, path)` - 获取服务 URL
+- `printSocketChatConfig()` - 打印当前配置
+
+**使用示例：**
+
+```typescript
+import { socketChatEndpoints } from '@/config/endpoints-socket-chat'
+
+// 连接到 Socket 服务
+socket.value = io(`${socketChatEndpoints.socket.baseUrl}/chat`, options)
+
+// 获取 Socket 路径
+const socketPath = socketChatEndpoints.socket.socketPath
+```
+
+## 环境变量
+
+### Chat 模块
+
+- `VITE_FRONTEND_HOST` - 前端服务主机
+- `VITE_FRONTEND_PORT` - 前端服务端口
+- `VITE_LLM_HOST` - LLM 服务主机
+- `VITE_LLM_PORT` - LLM 服务端口
+- `VITE_LLM_URL` - LLM 服务完整 URL
+
+### Socket-Chat 模块
+
+- `VITE_SOCKET_HOST` - Socket 服务主机
+- `VITE_SOCKET_PORT` - Socket 服务端口
+- `VITE_SOCKET_PATH` - Socket 路径
+- `VITE_SOCKET_URL` - Socket 服务完整 URL
+
+## 默认配置
+
+### Chat 模块
+
+```typescript
+{
+  frontend: {
+    host: 'localhost',
+    port: 5174,
+    protocol: 'http'
+  },
+  llm: {
+    host: 'localhost',
+    port: 1234,
+    protocol: 'http'
+  },
+  chat: {
+    host: '125.122.33.218',
+    port: 8810,
+    protocol: 'http',
+    path: '/chat'
+  }
 }
 ```
 
-### 2. 环境变量配置
-
-在项目根目录创建 `.env` 文件：
-
-```env
-# 前端服务配置
-VITE_FRONTEND_HOST=localhost
-VITE_FRONTEND_PORT=5174
-
-# 语音后端服务配置
-VITE_VOICE_BACKEND_HOST=localhost
-VITE_VOICE_BACKEND_PORT=1013
-# 或者使用完整 URL
-# VITE_VOICE_BACKEND_URL=http://localhost:1013
-
-# LLM 服务配置
-VITE_LLM_HOST=localhost
-VITE_LLM_PORT=1234
-# 或者使用完整 URL
-# VITE_LLM_URL=http://localhost:1234
-```
-
-## 🚀 使用方法
-
-### 1. 导入配置
+### Socket-Chat 模块
 
 ```typescript
-import { endpoints, getServiceUrl, getServiceConfig } from '@/config/endpoints'
+{
+  socket: {
+    host: '125.122.33.218',
+    port: 8810,
+    protocol: 'http',
+    socketPath: '/api/status/push/chat_start'
+  }
+}
 ```
 
-### 2. 使用服务 URL
+## 迁移指南
+
+如果您的代码仍在使用旧的 `endpoints.ts`，请按以下方式迁移：
+
+### 从 `endpoints.ts` 迁移到 `endpoints-chat.ts`
 
 ```typescript
-// 获取语音后端服务 URL
-const voiceBackendUrl = endpoints.voiceBackend.baseUrl
-
-// 获取特定路径的 URL
-const speechUrl = getServiceUrl('voiceBackend', '/speech')
-
-// 获取服务配置
-const llmConfig = getServiceConfig('llm')
-```
-
-### 3. 在组件中使用
-
-```typescript
-// 在 Vue 组件中
+// 旧代码
 import { endpoints } from '@/config/endpoints'
+const url = endpoints.chat.baseUrl
 
-const voiceBackendUrl = endpoints.voiceBackend.baseUrl
-const llmUrl = endpoints.llm.baseUrl
+// 新代码
+import { chatEndpoints } from '@/config/endpoints-chat'
+const url = chatEndpoints.chat.baseUrl
 ```
 
-## 🔄 配置更新
-
-### 1. 修改默认配置
-
-编辑 `src/config/endpoints.ts` 中的 `defaultConfig` 对象。
-
-### 2. 使用环境变量
-
-在 `.env` 文件中设置相应的环境变量。
-
-### 3. 运行时配置
-
-可以通过代码动态修改配置：
+### 从 `endpoints.ts` 迁移到 `endpoints-socket-chat.ts`
 
 ```typescript
+// 旧代码
 import { endpoints } from '@/config/endpoints'
+const socketUrl = endpoints.socket.baseUrl
 
-// 修改语音后端地址
-endpoints.voiceBackend.host = '192.168.1.100'
-endpoints.voiceBackend.port = 8080
+// 新代码
+import { socketChatEndpoints } from '@/config/endpoints-socket-chat'
+const socketUrl = socketChatEndpoints.socket.baseUrl
 ```
 
-## 📊 配置优先级
+## 注意事项
 
-1. 环境变量配置 (最高优先级)
-2. 默认配置 (最低优先级)
-
-## 🎯 优势
-
-1. **统一管理**: 所有服务地址集中配置
-2. **环境适配**: 支持不同环境的配置
-3. **类型安全**: 完整的 TypeScript 类型支持
-4. **易于维护**: 修改配置只需更新一个地方
-5. **开发友好**: 支持环境变量和默认值
-
-## 📝 注意事项
-
-1. 环境变量必须以 `VITE_` 开头才能在客户端使用
-2. 修改配置后需要重启开发服务器
-3. 生产环境建议使用环境变量配置
-4. 确保所有服务地址都是可访问的
+1. **模块独立性**: 每个模块使用独立的配置文件，避免配置混乱
+2. **向后兼容**: 旧的 `endpoints.ts` 仍保留，但建议迁移到新配置
+3. **类型安全**: 所有配置都有完整的 TypeScript 类型定义
+4. **环境变量**: 支持通过环境变量覆盖默认配置

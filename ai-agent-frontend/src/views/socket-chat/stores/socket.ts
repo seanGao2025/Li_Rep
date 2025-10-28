@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { io, Socket } from 'socket.io-client'
-import { endpoints } from '@/config/endpoints'
+import { socketEndpoints } from '@/config/endpoints-socket'
 
 export const useSocketStore = defineStore('socket', () => {
   // 状态
@@ -9,7 +9,7 @@ export const useSocketStore = defineStore('socket', () => {
   const socket = ref<Socket | null>(null)
   const connectionId = ref('')
   const lastUpdate = ref('')
-  const messageLogs = ref<Array<{ time: string; message: string }>>([])
+  const messageLogs = ref<Array<{ time: string; message: string; type?: string }>>([])
 
   // 方法
   const connect = () => {
@@ -22,11 +22,8 @@ export const useSocketStore = defineStore('socket', () => {
       socket.value = null
     }
 
-    socket.value = io(endpoints.socket.baseUrl, {
-      path: endpoints.socket.path || '/socket.io/',
-      query: {
-        type: 'LiAI'
-      },
+    // 配置 Socket.IO 连接选项
+    const socketOptions: any = {
       transports: ['polling', 'websocket'],
       timeout: 10000,
       reconnection: true,
@@ -34,6 +31,14 @@ export const useSocketStore = defineStore('socket', () => {
       reconnectionDelay: 1000,
       upgrade: true,
       rememberUpgrade: false
+    }
+
+    // 连接到 /chat 命名空间（Flask-SocketIO）
+    socket.value = io(`${socketEndpoints.socket.baseUrl}/chat`, socketOptions)
+    
+    console.log('🔌 Socket 连接配置:', {
+      url: `${socketEndpoints.socket.baseUrl}/chat`,
+      transports: socketOptions.transports
     })
 
     // 监听连接事件
@@ -42,6 +47,23 @@ export const useSocketStore = defineStore('socket', () => {
       connectionId.value = socket.value?.id || ''
       lastUpdate.value = new Date().toLocaleString()
       addLog('已连接数据库服务器')
+    })
+
+    // 监听 Flask-SocketIO 的 connected 事件
+    socket.value.on('connected', (data) => {
+      console.log('收到 connected 事件:', data)
+      addLog(`服务器连接确认: ${JSON.stringify(data)}`)
+    })
+
+    // 监听 status 事件（Flask-SocketIO 状态推送）
+    socket.value.on('status', (data) => {
+      console.log('收到 status 事件:', data)
+      if (data && typeof data === 'object') {
+        const stage = data.stage || 'unknown'
+        const payload = data.data || {}
+        
+        addLog(`状态更新 [${stage}]: ${JSON.stringify(payload)}`, 'status')
+      }
     })
 
     // 监听断开连接事件
@@ -77,9 +99,9 @@ export const useSocketStore = defineStore('socket', () => {
       if (!['connect', 'disconnect', 'connect_error', 'reconnect', 'reconnect_attempt', 'upgrade', 'downgrade', 'connect_timeout'].includes(eventName)) {
         console.log('Socket 收到事件:', eventName, args)
         if (args.length > 0) {
-          addLog(`收到 ${eventName} 事件: ${JSON.stringify(args[0])}`)
+          addLog(`收到 ${eventName} 事件: ${JSON.stringify(args[0])}`, 'all')
         } else {
-          addLog(`收到 ${eventName} 事件`)
+          addLog(`收到 ${eventName} 事件`, 'all')
         }
       }
     })
@@ -173,11 +195,12 @@ export const useSocketStore = defineStore('socket', () => {
     }
   }
 
-  const addLog = (message: string) => {
+  const addLog = (message: string, type?: string) => {
     const now = new Date()
     messageLogs.value.unshift({
       time: now.toLocaleTimeString(),
-      message
+      message,
+      type
     })
 
     // 限制日志数量

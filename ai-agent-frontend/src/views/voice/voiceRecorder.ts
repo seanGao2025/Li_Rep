@@ -52,28 +52,23 @@ export class VoiceRecorder {
   private isInSilence: boolean = false // 是否处于静音状态
   private isListeningForSpeech: boolean = false // 是否正在监听用户说话
   private isCurrentlyRecording: boolean = false // 是否正在录音
-  private preRecordingBuffer: Blob[] = [] // 预录音缓冲区
-  private isPreRecording: boolean = false // 是否正在预录音
-  private preRecordingMediaRecorder: MediaRecorder | null = null // 预录音MediaRecorder
   private isFirstStart: boolean = true // 是否是第一次启动
   private lowVolumeCount: number = 0 // 连续低音量计数
   private volumeHistory: number[] = [] // 音量历史记录
   private maxVolumeHistory: number = 20 // 最大历史记录数量
-  private maxPreRecordingChunks: number = 100 // 最大预录音块数（5秒，50ms*100=5秒）
-  private preRecordingChunkSize: number = 50 // 预录音数据收集间隔（50ms）
-  private preRecordingStartTime: number = 0 // 预录音开始时间
   // 移除了音量历史和自适应阈值相关属性
 
   constructor(options: VoiceRecorderOptions = {}) {
     this.options = {
       audioBitsPerSecond: 16000, // 降低比特率，提高兼容性
-      mimeType: this.getSupportedMimeType(),
+      mimeType: 'audio/wav', // 默认值，实际使用时再获取
       silenceThreshold: 0.05, // 结束录音的静音阈值（提高阈值，避免环境噪音干扰）
       speechStartThreshold: 0.15, // 开始录音的语音阈值（较高，需要明显说话才触发）
       silenceDuration: 1000, // 1秒静音，提高响应速度
       minRecordingDuration: 1000, // 最小录音时长1秒，确保有足够内容
       ...options
     }
+    // mimeType 在首次使用时延迟获取
   }
 
   /**
@@ -339,70 +334,12 @@ export class VoiceRecorder {
     requestAnimationFrame(checkVolume)
   }
 
-  /**
-   * 开始预录音（持续录音，用于缓冲）
-   */
-  private async startPreRecording(): Promise<void> {
-    if (!this.audioStream || this.isPreRecording) return
-
-    try {
-      console.log('🎤 开始预录音，确保不丢失用户开始说话的内容')
-      this.isPreRecording = true
-      this.preRecordingBuffer = []
-      this.preRecordingStartTime = Date.now()
-
-      // 创建预录音MediaRecorder，使用与正式录音相同的格式
-      const preRecordingMimeType = this.getSupportedMimeType() // 使用相同的格式选择方法
-      this.preRecordingMediaRecorder = new MediaRecorder(this.audioStream, {
-        audioBitsPerSecond: this.options.audioBitsPerSecond,
-        mimeType: preRecordingMimeType
-      })
-
-      // 设置预录音事件监听器
-      this.preRecordingMediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          this.preRecordingBuffer.push(event.data)
-          
-          // 每10个块输出一次调试信息，避免日志过多
-          if (this.preRecordingBuffer.length % 10 === 0) {
-            const totalSize = this.preRecordingBuffer.reduce((sum, chunk) => sum + chunk.size, 0)
-            console.log(`🎤 预录音进度: 块数=${this.preRecordingBuffer.length}, 总大小=${totalSize}bytes, 当前块大小=${event.data.size}bytes`)
-          }
-          
-          // 限制缓冲区大小，只保留最近5秒的内容
-          if (this.preRecordingBuffer.length > this.maxPreRecordingChunks) {
-            const removedChunk = this.preRecordingBuffer.shift()
-            if (removedChunk) {
-              console.log(`🎤 移除最旧的预录音块: 大小=${removedChunk.size}bytes`)
-            }
-          }
-        }
-      }
-
-      this.preRecordingMediaRecorder.onerror = (event) => {
-        console.error('预录音错误:', event)
-      }
-
-      // 开始预录音，每50ms收集一次数据，提高精度
-      this.preRecordingMediaRecorder.start(this.preRecordingChunkSize)
-      console.log(`🎤 预录音已启动，格式=${preRecordingMimeType}，收集间隔=${this.preRecordingChunkSize}ms`)
-
-    } catch (error) {
-      console.error('预录音启动失败:', error)
-      this.isPreRecording = false
-    }
-  }
 
   /**
    * 停止预录音
    */
   private stopPreRecording(): void {
-    if (this.preRecordingMediaRecorder && this.isPreRecording) {
-      console.log('🎤 停止预录音')
-      this.preRecordingMediaRecorder.stop()
-      this.preRecordingMediaRecorder = null
-      this.isPreRecording = false
-    }
+    // 预录音功能已移除，此方法保留为空方法以便兼容
   }
 
   /**
@@ -432,79 +369,6 @@ export class VoiceRecorder {
     await this.startRecordingInternal(true)
     console.log('🎤 录音已开始')
   }
-
-  /**
-   * 开始实际录音（合并预录音内容）- 保留方法用于兼容性
-   */
-  private async startActualRecordingWithPreBuffer(): Promise<void> {
-    if (this.isCurrentlyRecording) return
-
-    console.log('🎤 开始实际录音，合并预录音内容')
-    
-    // 调用用户开始说话的回调（用于打断AI生成/播放）
-    console.log('🎤 onUserStartSpeaking 回调是否存在:', !!this.callbacks.onUserStartSpeaking)
-    if (this.callbacks.onUserStartSpeaking) {
-      console.log('🎤 调用用户开始说话回调，准备打断AI')
-      this.callbacks.onUserStartSpeaking()
-      console.log('🎤 用户开始说话回调已执行')
-    } else {
-      console.warn('🎤 onUserStartSpeaking 回调不存在，无法打断AI')
-    }
-    
-    this.isCurrentlyRecording = true
-    this.lastSoundTime = Date.now()
-    this.silenceStartTime = 0
-    this.isInSilence = false
-
-    // 停止预录音
-    this.stopPreRecording()
-
-    // 开始正式录音
-    await this.startRecordingInternal(true)
-
-    // 将预录音内容合并到当前录音中
-    if (this.preRecordingBuffer.length > 0) {
-      const totalPreRecordingSize = this.preRecordingBuffer.reduce((sum, chunk) => sum + chunk.size, 0)
-      const preRecordingDuration = Date.now() - this.preRecordingStartTime
-      const avgChunkSize = totalPreRecordingSize / this.preRecordingBuffer.length
-      
-      console.log(`🎤 合并预录音内容，共 ${this.preRecordingBuffer.length} 个音频块，总大小=${totalPreRecordingSize}bytes，预录音时长=${preRecordingDuration}ms，平均块大小=${avgChunkSize.toFixed(2)}bytes`)
-      
-      // 验证预录音质量
-      if (totalPreRecordingSize < 1000) { // 小于1KB可能有问题
-        console.warn('🎤 预录音内容过少，可能存在质量问题')
-      }
-      
-      if (avgChunkSize < 50) { // 平均块大小过小
-        console.warn('🎤 预录音块大小过小，可能存在数据丢失')
-      }
-      
-      // 验证预录音和正式录音的格式一致性
-      const preRecordingFormat = this.preRecordingBuffer[0]?.type || 'unknown'
-      const currentFormat = this.audioChunks[0]?.type || 'unknown'
-      
-      if (preRecordingFormat !== currentFormat && this.audioChunks.length > 0) {
-        console.warn(`🎤 格式不一致警告: 预录音格式=${preRecordingFormat}, 正式录音格式=${currentFormat}`)
-      }
-      
-      // 将预录音内容添加到当前录音的音频块中（前置）
-      this.audioChunks.unshift(...this.preRecordingBuffer)
-      
-      // 计算合并后的总大小
-      const totalSize = this.audioChunks.reduce((sum, chunk) => sum + chunk.size, 0)
-      console.log(`🎤 合并完成，当前录音总大小=${totalSize}bytes，音频块数量=${this.audioChunks.length}`)
-      
-      // 验证合并后的音频质量
-      if (totalSize < 2000) { // 小于2KB可能有问题
-        console.warn('🎤 合并后音频总大小过小，可能存在质量问题')
-      }
-      
-      this.preRecordingBuffer = []
-    } else {
-      console.log('🎤 没有预录音内容需要合并')
-    }
-  }
-
 
   /**
    * 开始静音检测（录音过程中）
@@ -683,8 +547,6 @@ export class VoiceRecorder {
     this.analyser = null
     this.dataArray = null
     this.audioChunks = []
-    this.preRecordingBuffer = []
-    this.isPreRecording = false
     this.isListeningForSpeech = false
     this.isCurrentlyRecording = false
     this.isFirstStart = true
@@ -695,11 +557,18 @@ export class VoiceRecorder {
    * @returns string
    */
 
+  private cachedMimeType: string | null = null // 缓存的 MIME 类型
+
   /**
-   * 获取支持的 MIME 类型
+   * 获取支持的 MIME 类型（延迟初始化，避免模块加载时调用）
    * @returns string
    */
   private getSupportedMimeType(): string {
+    // 如果已经缓存，直接返回
+    if (this.cachedMimeType) {
+      return this.cachedMimeType
+    }
+
     const mimeTypes = [
       'audio/wav', // 优先使用 WAV，最兼容
       'audio/mp4', // MP4 格式，兼容性好
@@ -712,11 +581,13 @@ export class VoiceRecorder {
     for (const mimeType of mimeTypes) {
       if (MediaRecorder.isTypeSupported(mimeType)) {
         console.log('🎤 选择音频格式:', mimeType)
+        this.cachedMimeType = mimeType
         return mimeType
       }
     }
 
     console.warn('🎤 没有找到支持的音频格式，使用默认格式')
+    this.cachedMimeType = 'audio/wav'
     return 'audio/wav' // 默认使用WAV，避免webm问题
   }
 

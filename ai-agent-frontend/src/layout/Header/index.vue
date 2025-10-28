@@ -42,7 +42,7 @@ const activeMenu = ref('/AI')
 const currentTime = ref('')
 
 // 时间更新定时器
-let timeInterval: NodeJS.Timeout | null = null
+let timeInterval: ReturnType<typeof setInterval> | null = null
 
 // 方法
 const handleMenuSelect = (index: string) => {

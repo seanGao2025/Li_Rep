@@ -16,10 +16,7 @@
             :data-msg-id="index"
             v-memo="[message.content, message.role, streaming]"
           >
-            <div
-              v-if="message.role === 'assistant'"
-              v-html="generateSummaryHtml(message.content, index, streaming)"
-            ></div>
+            <div v-if="message.role === 'assistant'" v-html="message.content"></div>
             <div
               v-else-if="message.role === 'system'"
               v-html="formatFullContent(message.content, index)"
@@ -154,28 +151,9 @@
       <!-- 右侧面板 -->
       <div class="panel-right">
         <div class="detail-panel">
-          <div class="detail-content" ref="detailContent" @scroll="handleRightScroll">
-            <div
-              v-for="(message, index) in messages"
-              :key="index"
-              :class="getMessageClass(message.role)"
-              :data-msg-id="index"
-              v-memo="[message.content, message.role, message.audioUrl]"
-            >
-              <div v-html="formatFullContent(message.content, index)"></div>
-
-              <!-- 语音输入后的音频播放条 - 显示在右侧AI回答内容之后 -->
-              <AudioPlayer
-                v-if="message.role === 'assistant' && message.audioUrl"
-                :visible="true"
-                :audio-url="message.audioUrl"
-                :auto-play="true"
-                @play="onAudioPlay"
-                @pause="onAudioPause"
-                @ended="onAudioEnded"
-                @error="onAudioError"
-              />
-            </div>
+          <div class="detail-content" ref="detailContent">
+            <div v-if="rightPanelMessage" class="socket-message" v-html="rightPanelMessage"></div>
+            <div v-else class="empty-message">等待 Socket 消息...</div>
           </div>
         </div>
       </div>
@@ -224,13 +202,12 @@ import FileBrowserModal from './components/FileBrowserModal.vue'
 
 import ModelModal from './components/ModelModal.vue'
 import VoiceProcessingBar from './components/VoiceProcessingBar.vue'
-import AudioPlayer from './components/AudioPlayer.vue'
 
 import { useChatStore } from './stores/chat'
 
 import { useSocketStore } from './stores/socket'
 
-import { formatFullContent, generateSummaryHtml } from '@/views/chat/utils/contentFormatter'
+import { formatFullContent } from '@/views/chat/utils/contentFormatter'
 import { useVoice } from '../voice/useVoice'
 import { getServiceUrl } from '@/config/endpoints'
 import './styles/chat.scss'
@@ -241,6 +218,7 @@ const streaming = ref(false)
 const showLoading = ref(false)
 const isAudioPlaying = ref(false) // 音频播放状态
 const isFirstInteraction = ref(true)
+const rightPanelMessage = ref('') // 右侧面板 Socket 消息
 
 // 语音输入相关
 const {
@@ -310,7 +288,6 @@ const modelActive = ref(false)
 // 滚动控制状态
 const leftScrollDisabled = ref(false) // 左侧面板是否禁用自动滚动
 const rightScrollDisabled = ref(false) // 右侧面板是否禁用自动滚动
-const currentGenerationPosition = ref(0) // 当前生成内容的位置
 
 // 滚动方向跟踪
 const lastRightScrollTop = ref(0) // 右侧面板上次滚动位置
@@ -677,54 +654,6 @@ const generateAudioUrl = async (text: string): Promise<string | null> => {
   }
 }
 
-// 音频播放事件处理
-const onAudioPlay = () => {
-  console.log('🎤 音频开始播放')
-  isAudioPlaying.value = true
-}
-
-const onAudioPause = () => {
-  console.log('🎤 音频暂停')
-  isAudioPlaying.value = false
-}
-
-const onAudioEnded = () => {
-  console.log('🎤 音频播放完成')
-  isAudioPlaying.value = false
-  // 可以在这里添加播放完成后的逻辑
-}
-
-const onAudioError = (error: Error) => {
-  console.error('🎤 音频播放错误:', error)
-  isAudioPlaying.value = false
-}
-
-// 自动滚动到右侧面板底部
-const scrollToBottom = () => {
-  // 如果右侧面板滚动被禁用，则不执行自动滚动
-  if (rightScrollDisabled.value) return
-
-  nextTick(() => {
-    if (detailContent.value) {
-      const targetScrollTop = detailContent.value.scrollHeight
-      const currentScrollTop = detailContent.value.scrollTop
-
-      // 更新当前生成内容的位置
-      currentGenerationPosition.value = targetScrollTop
-
-      // 如果距离底部很近，直接滚动；否则使用平滑滚动
-      if (Math.abs(targetScrollTop - currentScrollTop) < 50) {
-        detailContent.value.scrollTop = targetScrollTop
-      } else {
-        detailContent.value.scrollTo({
-          top: targetScrollTop,
-          behavior: 'smooth'
-        })
-      }
-    }
-  })
-}
-
 // 自动滚动到左侧面板底部
 const scrollLeftToBottom = () => {
   // 如果左侧面板滚动被禁用，则不执行自动滚动
@@ -813,34 +742,6 @@ const handleLeftScroll = () => {
   }
 }
 
-// 右侧面板滚动事件处理
-const handleRightScroll = () => {
-  if (!detailContent.value) return
-
-  const { scrollTop, clientHeight } = detailContent.value
-
-  // 检测滚动方向
-  const scrollDelta = scrollTop - lastRightScrollTop.value
-  const scrollDirection = Math.abs(scrollDelta) > 2 ? (scrollDelta > 0 ? 'down' : 'up') : 'none'
-
-  // 更新上次滚动位置
-  lastRightScrollTop.value = scrollTop
-
-  // 如果用户上滚，停止自动滚动
-  if (scrollDirection === 'up' && !rightScrollDisabled.value) {
-    rightScrollDisabled.value = true
-    return
-  }
-
-  // 检查用户是否滚动到了当前生成内容所在的页面
-  const isAtGenerationPage = scrollTop + clientHeight >= currentGenerationPosition.value - 50
-
-  // 如果用户下滚到当前生成内容页面，重新启用自动滚动
-  if (scrollDirection === 'down' && isAtGenerationPage && rightScrollDisabled.value) {
-    rightScrollDisabled.value = false
-  }
-}
-
 // 将scrollToHeading函数挂载到全局，供HTML中的onclick调用
 ;(window as any).scrollToHeading = scrollToHeading
 
@@ -874,8 +775,7 @@ const copyCode = (codeId: string) => {
 watch(
   messages,
   () => {
-    scrollToBottom() // 右侧面板滚动到底部
-    scrollLeftToBottom() // 左侧面板也滚动到底部
+    scrollLeftToBottom() // 左侧面板滚动到底部
   },
   { deep: true }
 )
@@ -883,8 +783,7 @@ watch(
 // 监听流式传输状态，在流式传输时也自动滚动
 watch(streaming, newVal => {
   if (newVal) {
-    scrollToBottom() // 右侧面板滚动到底部
-    scrollLeftToBottom() // 左侧面板也滚动到底部
+    scrollLeftToBottom() // 左侧面板滚动到底部
   }
 })
 
@@ -904,6 +803,38 @@ onMounted(() => {
   nextTick(() => {
     initializeScrollPositions()
   })
+
+  // 自动连接 Socket 服务
+  if (!socketStore.connected) {
+    console.log('🔄 自动连接 Socket...')
+    socketStore.connect()
+  }
+
+  // 监听 Socket 消息，渲染到右侧面板（只显示 status 类型的事件）
+  watch(
+    () => socketStore.messageLogs,
+    newLogs => {
+      if (newLogs.length > 0) {
+        // 只显示 status 类型的消息到右侧面板
+        // 反转数组，让最先返回的消息显示在顶部
+        const statusMessages = newLogs
+          .filter(log => log.type === 'status')
+          .reverse() // 反转数组，让最老的消息在顶部
+          .map(
+            log => `
+            <div class="socket-log-item">
+              <div class="socket-log-time">[${log.time}]</div>
+              <div class="socket-log-content">${log.message}</div>
+            </div>
+          `
+          )
+          .join('')
+
+        rightPanelMessage.value = statusMessages
+      }
+    },
+    { deep: true, immediate: true }
+  )
 })
 </script>
 

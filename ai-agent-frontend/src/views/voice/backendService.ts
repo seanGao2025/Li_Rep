@@ -23,7 +23,8 @@ export class BackendService {
 
   constructor(baseUrl: string = endpoints.voiceBackend.baseUrl) {
     this.baseUrl = baseUrl
-    this.managerPath = '/Users/ba/Desktop/HRL/ai-agent-frontend/src/views/voice/backend'
+    // 使用相对路径，确保在不同环境下都能正常工作
+    this.managerPath = './src/views/voice/backend'
   }
 
   /**
@@ -162,7 +163,10 @@ export class BackendService {
       const missing: string[] = []
       results.forEach((result, index) => {
         if (result.status === 'rejected') {
-          missing.push(endpoints[index])
+          const endpoint = endpoints[index]
+          if (endpoint) {
+            missing.push(endpoint)
+          }
         }
       })
 

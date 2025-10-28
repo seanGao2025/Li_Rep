@@ -407,9 +407,10 @@ const handleSendStop = async (text?: string | MouseEvent) => {
   // 发送消息
   chatStore.addMessage('user', messageText)
 
-  // 只有在非持续模式下才清空输入框
+  // 只有在非持续模式下才清空输入框和重置语音输入标志
   if (!isContinuousMode.value) {
     inputText.value = ''
+    isVoiceInput.value = false // 重置语音输入标志
   }
 
   // 重置语音生成相关的标记
@@ -492,6 +493,7 @@ const handleSendStop = async (text?: string | MouseEvent) => {
     // 在持续模式下，不要重置语音输入标志，保持持续监听
     if (!isContinuousMode.value) {
       isVoiceInput.value = false
+      console.log('🎤 非持续模式，重置isVoiceInput为false')
     } else {
       console.log('🎤 持续模式，保持语音输入标志为true')
     }
