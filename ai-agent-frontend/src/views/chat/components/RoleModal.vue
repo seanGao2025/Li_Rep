@@ -1,5 +1,11 @@
 <template>
   <el-dialog v-model="show" title="角色设置" width="600px" :before-close="handleClose">
+    <div class="template-actions">
+      <el-button type="primary" plain @click="applyDigitalTwinTemplate">
+        填充数字孪生潮流开发模板
+      </el-button>
+      <span class="template-tip">可一键生成面向 Three.js 数字孪生潮流展示开发的开放 Prompt</span>
+    </div>
     <el-input
       v-model="rolePrompt"
       type="textarea"
@@ -15,6 +21,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { DIGITAL_TWIN_POWER_FLOW_PROMPT } from '@/constants/promptTemplates'
 
 const emit = defineEmits(['confirm'])
 
@@ -23,8 +30,13 @@ const loading = ref(false)
 
 // 使用计算属性处理 v-model
 const show = ref(false)
-const init = () => {
+const init = (initialPrompt = '') => {
+  rolePrompt.value = initialPrompt
   show.value = true
+}
+
+const applyDigitalTwinTemplate = () => {
+  rolePrompt.value = DIGITAL_TWIN_POWER_FLOW_PROMPT
 }
 
 const handleClose = () => {
@@ -51,6 +63,19 @@ defineExpose({
 </script>
 
 <style scoped>
+.template-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.template-tip {
+  font-size: 12px;
+  color: #606266;
+  line-height: 1.4;
+}
+
 :deep(.el-textarea__inner) {
   min-height: 300px !important;
   height: 300px !important;

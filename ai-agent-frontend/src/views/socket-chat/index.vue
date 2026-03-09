@@ -468,7 +468,7 @@ const handleSendStop = async (text?: string | MouseEvent) => {
 
 // 弹窗控制方法
 const openRoleModal = () => {
-  roleModalRef.value.init()
+  roleModalRef.value.init(chatStore.systemPrompt)
 }
 
 const openDataLinkModal = () => {
