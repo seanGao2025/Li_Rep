@@ -538,7 +538,7 @@ const generateAudioForCurrentMessage = async (content: string): Promise<void> =>
 
 // 弹窗控制方法
 const openRoleModal = () => {
-  roleModalRef.value.init()
+  roleModalRef.value.init(chatStore.systemPrompt)
 }
 
 const openDataLinkModal = () => {
